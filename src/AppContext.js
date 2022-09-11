@@ -3,10 +3,27 @@ import React, { createContext, useReducer } from 'react';
 const initialContext = {
   ethBalance: '--',
   setEthBalance: () => {},
-  cTokenBalance: '--',
-  setCTokenBalance: () => {},
-  exchangeRate: 0,
-  setExchangeRate: () => {},
+  casinoBalance: '--',
+  setCasinoBalance: () => {},
+
+  currentBetAmount: '--',
+  setCurrentBetAmount: () => {},
+
+  casinoNumber: '--',
+  setCasinoNumber: () => {},
+
+  betStatus: '--',
+  setBetStatus: () => {},
+
+  winnerOne: '--',
+  setWinnerOne: () => {},
+
+  winnerTwo: '--',
+  setWinnerTwo: () => {},
+
+  winnerThree: '--',
+  setWinnerThree: () => {},
+
   isWalletConnectionModalOpen: false,
   setWalletConnectModal: () => {},
   txnStatus: 'NOT_SUBMITTED',
@@ -21,16 +38,46 @@ const appReducer = (state, { type, payload }) => {
         ethBalance: payload,
       };
 
-    case 'SET_C_TOKEN_BALANCE':
+    case 'SET_CASINO_BALANCE':
       return {
         ...state,
-        cTokenBalance: payload,
+        casinoBalance: payload,
       };
 
-    case 'SET_EXCHANGE_RATE':
+    case 'SET_CURRENT_BET_AMOUNT':
       return {
         ...state,
-        exchangeRate: payload,
+        currentBetAmount: payload,
+      };
+
+    case 'SET_CASINO_NUMBER':
+      return {
+        ...state,
+        casinoNumber: payload,
+      };
+
+    case 'SET_BET_STATUS':
+      return {
+        ...state,
+        betStatus: payload,
+      };
+
+    case 'SET_WINNER_ONE':
+      return {
+        ...state,
+        winnerOne: payload,
+      };
+
+    case 'SET_WINNER_TWO':
+      return {
+        ...state,
+        winnerTwo: payload,
+      };
+
+    case 'SET_WINNER_THREE':
+      return {
+        ...state,
+        winnerThree: payload,
       };
 
     case 'SET_WALLET_MODAL':
@@ -59,13 +106,33 @@ export const AppContextProvider = ({ children }) => {
     setEthBalance: (balance) => {
       dispatch({ type: 'SET_ETH_BALANCE', payload: balance });
     },
-    cTokenBalance: store.cTokenBalance,
-    setCTokenBalance: (balance) => {
-      dispatch({ type: 'SET_C_TOKEN_BALANCE', payload: balance });
+    casinoBalance: store.casinoBalance,
+    setCasinoBalance: (balance) => {
+      dispatch({ type: 'SET_CASINO_BALANCE', payload: balance });
     },
-    exchangeRate: store.exchangeRate,
-    setExchangeRate: (rate) => {
-      dispatch({ type: 'SET_EXCHANGE_RATE', payload: rate });
+    currentBetAmount: store.currentBetAmount,
+    setCurrentBetAmount: (balance) => {
+      dispatch({ type: 'SET_CURRENT_BET_AMOUNT', payload: balance });
+    },
+    casinoNumber: store.casinoNumber,
+    setCasinoNumber: (number) => {
+      dispatch({ type: 'SET_CASINO_NUMBER', payload: number });
+    },
+    betStatus: store.betStatus,
+    setBetStatus: (status) => {
+      dispatch({ type: 'SET_BET_STATUS', payload: status });
+    },
+    winnerOne: store.winnerOne,
+    setWinnerOne: (winner) => {
+      dispatch({ type: 'SET_WINNER_ONE', payload: winner });
+    },
+    winnerTwo: store.winnerTwo,
+    setWinnerTwo: (winner) => {
+      dispatch({ type: 'SET_WINNER_TWO', payload: winner });
+    },
+    winnerThree: store.winnerThree,
+    setWinnerThree: (winner) => {
+      dispatch({ type: 'SET_WINNER_THREE', payload: winner });
     },
     isWalletConnectModalOpen: store.isWalletConnectModalOpen,
     setWalletConnectModal: (open) => {

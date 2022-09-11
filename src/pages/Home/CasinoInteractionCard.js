@@ -6,7 +6,7 @@ import Card from '../../components/Card';
 import Button from 'react-bootstrap/Button';
 import { colors } from '../../theme';
 import { ArrowDown } from 'react-bootstrap-icons';
-import { useCToken } from '../../hooks/useCToken';
+import { useCasino } from '../../hooks/useCasino';
 import { useAppContext } from '../../AppContext';
 import Spinner from 'react-bootstrap/Spinner';
 import useEth from '../../hooks/useEth';
@@ -16,7 +16,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 100px;
   -webkit-box-align: center;
   align-items: center;
   flex: 1 1 0%;
@@ -24,13 +23,14 @@ const Container = styled.div`
   z-index: 1;
 `;
 
-const CompInteractionCard = () => {
+const CasinoInteractionCard = () => {
   const [depositAmount, setDepositAmount] = useState(0);
-  const { deposit, cTokenBalance, exchangeRate } = useCToken();
+  const { playGame, checkResult, currentBetAmount, betStatus, casinoNumber } = useCasino();
   const { ethBalance } = useEth();
   const { txnStatus, setTxnStatus } = useTransaction();
-  const handleDepositSubmit = () => deposit(depositAmount);
-  const convertedAmount = useMemo(() => Number(depositAmount / exchangeRate).toFixed(4), [depositAmount, exchangeRate]);
+  const handleMakeABet = () => playGame(depositAmount);
+  const handleCheckResult = () => checkResult();
+  //const convertedAmount = useMemo(() => Number(depositAmount / exchangeRate).toFixed(4), [depositAmount, exchangeRate]);
 
   if (txnStatus === 'LOADING') {
     return (
@@ -42,12 +42,44 @@ const CompInteractionCard = () => {
     );
   }
 
-  if (txnStatus === 'COMPLETE') {
+  if (txnStatus === 'COMPLETE' && betStatus === '--') {
     return (
       <Container show>
         <Card style={{ maxWidth: 420, minHeight: 400 }}>
           <Text block center className="mb-5">
             Txn Was successful!
+          </Text>
+          <Button onClick={() => setTxnStatus('NOT_SUBMITTED')}>Go Back</Button>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (txnStatus === 'COMPLETE' && betStatus === 'WON') {
+    return (
+      <Container show>
+        <Card style={{ maxWidth: 420, minHeight: 400 }}>
+          <Text block center className="mb-5">
+            Txn Was successful!
+          </Text>
+          <Text block center className="mb-5">
+            The number {casinoNumber} is even. Congratulations you've won.
+          </Text>
+          <Button onClick={() => setTxnStatus('NOT_SUBMITTED')}>Go Back</Button>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (txnStatus === 'COMPLETE' && betStatus === 'LOST') {
+    return (
+      <Container show>
+        <Card style={{ maxWidth: 420, minHeight: 400 }}>
+          <Text block center className="mb-5">
+            Txn Was successful!
+          </Text>
+          <Text block center className="mb-5">
+            The number {casinoNumber} is odd. Sorry you've lost.
           </Text>
           <Button onClick={() => setTxnStatus('NOT_SUBMITTED')}>Go Back</Button>
         </Card>
@@ -69,17 +101,20 @@ const CompInteractionCard = () => {
     <Container show>
       <Card style={{ maxWidth: 420, minHeight: 400 }}>
         <Text block t2 color={colors.green} className="mb-3">
-          Deposit
+          Lottery
         </Text>
         <BalanceInput balance={ethBalance} value={depositAmount} setValue={setDepositAmount} currency="eth" />
-        <ArrowDown color={colors.green} size={36} style={{ margin: '1rem auto' }} />
-        <BalanceInput balance={cTokenBalance} value={convertedAmount} currency="cToken" title="To" />
-        <Button variant="outline-dark" disabled={depositAmount <= 0} className="mt-3" onClick={handleDepositSubmit}>
-          Deposit {depositAmount} ETH
+        {/*<ArrowDown color={colors.green} size={36} style={{ margin: '1rem auto' }} />*/}
+        {/*<BalanceInput balance={cTokenBalance} value={convertedAmount} currency="cToken" title="To" />*/}
+        <Button variant="outline-dark" disabled={depositAmount <= 0} className="mt-3" onClick={handleMakeABet}>
+          Make a Bet
+        </Button>
+        <Button variant="outline-dark" disabled={currentBetAmount == 0} className="mt-3" onClick={handleCheckResult}>
+          Check Result
         </Button>
       </Card>
     </Container>
   );
 };
 
-export default CompInteractionCard;
+export default CasinoInteractionCard;
