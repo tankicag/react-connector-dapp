@@ -3,6 +3,7 @@ import React, { createContext, useReducer } from 'react';
 const initialContext = {
   ethBalance: '--',
   setEthBalance: () => {},
+  
   casinoBalance: '--',
   setCasinoBalance: () => {},
 
